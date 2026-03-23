@@ -433,8 +433,6 @@ html,body{height:100%;background:var(--base);font-family:'Segoe UI',system-ui,sa
 .fm-resizer.active::after{background:var(--text)}
 .fm-editor{display:none;flex-direction:column;flex-shrink:0;border-top:1px solid var(--surface0);height:45%;min-height:80px}
 .fm-editor.open{display:flex}
-.fm-container.editing .fm-body{flex:none;height:30%;min-height:80px}
-.fm-container.editing .fm-editor{height:auto;flex:1}
 .fm-editor-bar{display:flex;align-items:center;gap:6px;padding:4px 10px;background:var(--mantle);border-bottom:1px solid var(--surface0)}
 .fm-editor-name{flex:1;font-size:12px;color:var(--text);font-weight:600;overflow:hidden;text-overflow:ellipsis}
 .fm-editor-name.dirty::after{content:" *";color:var(--yellow)}
@@ -792,7 +790,6 @@ function createFmTab(){
     editorTA.readOnly=!on;
     editBtn.style.display=on?'none':'';
     saveBtn.style.display=on?'':'none';
-    el.classList.toggle('editing',on);
     if(on)editorTA.focus();
   }
 
