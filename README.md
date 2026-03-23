@@ -2,13 +2,14 @@
 ![CheatTerm demo](./cheatterm.gif)
 ## Overview
 
-CheatTerm is a lightweight web terminal that runs from a single Python file. It starts a Tornado server, creates a PTY-backed shell for each browser tab, and connects the browser to that shell over WebSocket. It also supports an optional cheat panel loaded from YAML, so common commands can be searched and pasted into the active terminal.
+CheatTerm is a lightweight web terminal that runs from a single Python file. It starts a Tornado server, creates a PTY-backed shell for each browser tab, and connects the browser to that shell over WebSocket. It also supports an optional cheat panel loaded from YAML, so common commands can be searched and pasted into the active terminal. A built-in file manager lets you browse, upload, download, and edit files from the same interface.
 
 ## Features
 
 - Single-file server — just one `.py` file, no build step
 - Full PTY support — interactive programs, ANSI colors, cursor movement all work
-- Multi-tab — open, switch, and close independent terminal sessions
+- Multi-tab — open, switch, and close independent terminal and file manager sessions
+- File manager — browse, upload, download, zip, rename, delete, and edit files
 - Clickable URLs — links in terminal output open in a new browser tab
 - URL parameters — launch with a startup command or welcome message
 - Command cheat sheet — toggle panel with predefined commands loaded from a YAML file
@@ -29,7 +30,7 @@ python ~/.local/share/cheatterm/cheatterm.py
 ```
 
 If `cheat.yaml` exists in the same directory as `cheatterm.py`, it is loaded automatically.
-Open `http://localhost:8890` or `http://[server IP address]:8890`in your browser.
+Open `http://localhost:8890` or `http://[server IP address]:8890` in your browser.
 
 ## Installation
 
@@ -123,6 +124,22 @@ Then open `http://localhost:1234` in your browser.
 | `--port`       | Port number                     | `8890`                                           |
 | `--cheat_file` | Path to a YAML cheat sheet file | auto-detect `cheat.yaml` in the script directory |
 
+### File manager
+
+Click the 📁 button in the tab bar or press `Ctrl+Shift+E` to open a file manager tab. Multiple file manager tabs can be open at the same time. Terminal and file manager tabs are numbered independently (Terminal #1, Terminal #2, Files #1, Files #2).
+
+**Browsing:** Double-click a folder to navigate into it. Use the ↑ button or edit the path bar to move around. The path bar always shows the full absolute path (e.g. `/home/pi/Documents`). Click column headers (Name, Size, Modified) to sort. Navigating to a path outside the home directory is silently ignored.
+
+**Uploading:** Click the Upload button or drag and drop files directly onto the file list.
+
+**Downloading:** Click the ↓ button next to a file. For folders, click the 📦 button in the Actions column to download as a zip archive.
+
+**Editing text files:** Click a file name to open it in the editor pane (read-only). Press the Edit button to enable editing. The status bar at the bottom shows the current cursor position (line and column). Press `Ctrl+S` to save. Unsaved changes are indicated with a `*` next to the file name. Binary files and files larger than 1 MB are shown as empty with a notice in the status bar.
+
+**Other actions:** Rename (✏) and Delete (🗑) buttons are available in the Actions column for each item. Use the New Folder button to create directories.
+
+Note: The cheat sheet ☰ button is disabled while a file manager tab is active.
+
 ### Command cheat sheet
  
 If `cheat.yaml` is in the same directory as `cheatterm.py`, it is loaded automatically. No `--cheat_file` option is needed.
@@ -167,3 +184,13 @@ http://localhost:8890/?display=System%20Monitor&start=htop
 
 Parameters only apply to the first tab. Tabs opened with the `+` button start with a plain shell.
 
+### Keyboard shortcuts
+
+| Shortcut         | Action                      |
+| ---------------- | --------------------------- |
+| `Ctrl+Shift+T`   | New terminal tab            |
+| `Ctrl+Shift+E`   | New file manager tab        |
+| `Ctrl+Shift+W`   | Close current tab           |
+| `Ctrl+Tab`       | Next tab                    |
+| `Ctrl+Shift+Tab` | Previous tab                |
+| `Ctrl+S`         | Save file (in editor)       |
