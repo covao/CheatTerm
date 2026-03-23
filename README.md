@@ -1,5 +1,5 @@
 # CheatTerm
-
+![CheatTerm demo](./cheatterm.gif)
 ## Overview
 
 CheatTerm is a lightweight web terminal that runs from a single Python file. It starts a Tornado server, creates a PTY-backed shell for each browser tab, and connects the browser to that shell over WebSocket. It also supports an optional cheat panel loaded from YAML, so common commands can be searched and pasted into the active terminal.
@@ -22,14 +22,14 @@ CheatTerm is a lightweight web terminal that runs from a single Python file. It 
 
 ```bash
 mkdir -p ~/.local/share/cheatterm
-cp cheatterm.py ~/.local/share/cheatterm/cheatterm.py
-cp cheat.yaml ~/.local/share/cheatterm/cheat.yaml
+cd ~/.local/share/cheatterm
+wget https://raw.githubusercontent.com/covao/CheatTerm/refs/heads/main/cheatterm.py
+wget https://raw.githubusercontent.com/covao/CheatTerm/refs/heads/main/cheat.yaml
 python ~/.local/share/cheatterm/cheatterm.py
 ```
 
 If `cheat.yaml` exists in the same directory as `cheatterm.py`, it is loaded automatically.
-
-Open `http://localhost:8890` in your browser.
+Open `http://localhost:8890` or `http://[server IP address]:8890`in your browser.
 
 ## Installation
 
@@ -47,8 +47,9 @@ Example:
 
 ```bash
 mkdir -p ~/.local/share/cheatterm
-cp cheatterm.py ~/.local/share/cheatterm/cheatterm.py
-cp cheat.yaml ~/.local/share/cheatterm/cheat.yaml
+cd ~/.local/share/cheatterm
+wget https://raw.githubusercontent.com/covao/CheatTerm/refs/heads/main/cheatterm.py
+wget https://raw.githubusercontent.com/covao/CheatTerm/refs/heads/main/cheat.yaml
 chmod +x ~/.local/share/cheatterm/cheatterm.py
 ```
 
