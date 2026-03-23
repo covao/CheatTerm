@@ -1,0 +1,40 @@
+title: Commands
+groups:
+  - name: Signals
+    commands:
+      - label: Ctrl+C (interrupt)
+        cmd: '\x03'
+      - label: Ctrl+Z (suspend)
+        cmd: '\x1a'
+      - label: Ctrl+D (EOF / logout)
+        cmd: '\x04'
+      - label: Ctrl+L (clear screen)
+        cmd: '\x0c'
+      - label: Ctrl+\ (quit / core dump)
+        cmd: '\x1c'
+  - name: System
+    commands:
+      - label: Disk usage
+        cmd: 'df -h\x0a'
+      - label: Memory
+        cmd: 'free -m\x0a'
+      - label: Process list
+        cmd: 'ps aux | head -20\x0a'
+      - label: Reboot with confirmation
+        cmd: 'read -p "Is it Okay to reboot? (y/n) " answer; if [ "$answer" = "y" ]; then reboot; fi\x0a'
+  - name: Network
+    commands:
+      - label: Open ports
+        cmd: 'ss -tlnp\x0a'
+      - label: IP address
+        cmd: 'ip addr show\x0a'
+  - name: Files
+    commands:
+      - label: List all files
+        cmd: 'ls -la\x0a'
+      - label: Find large files
+        cmd: 'find / -size +100M -type f 2>/dev/null\x0a'
+  - name: Utility
+    commands:
+      - label: nano editor
+        cmd: 'nano\x0a'
