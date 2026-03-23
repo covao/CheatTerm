@@ -22,6 +22,8 @@ CheatTerm is a lightweight web terminal that runs from a single Python file. It 
 ## Quick Start
 
 ```bash
+pip install tornado
+pip install pyyaml   # optional, required only for cheat sheet support
 mkdir -p ~/.local/share/cheatterm
 cd ~/.local/share/cheatterm
 wget https://raw.githubusercontent.com/covao/CheatTerm/refs/heads/main/cheatterm.py
@@ -30,7 +32,7 @@ python ~/.local/share/cheatterm/cheatterm.py
 ```
 
 If `cheat.yaml` exists in the same directory as `cheatterm.py`, it is loaded automatically.
-Open `http://localhost:8890` or `http://[server IP address]:8890` in your browser.
+open [http://localhost:8890](http://localhost:8890) in your browser.
 
 ## Installation
 
@@ -51,23 +53,6 @@ mkdir -p ~/.local/share/cheatterm
 cd ~/.local/share/cheatterm
 wget https://raw.githubusercontent.com/covao/CheatTerm/refs/heads/main/cheatterm.py
 wget https://raw.githubusercontent.com/covao/CheatTerm/refs/heads/main/cheat.yaml
-chmod +x ~/.local/share/cheatterm/cheatterm.py
-```
-
-## Uninstallation
-
-Delete the installed files:
-
-```bash
-rm -rf ~/.local/share/cheatterm
-```
-
-If you enabled auto-start, also remove the user service file:
-
-```bash
-systemctl --user disable --now cheatterm
-rm -f ~/.config/systemd/user/cheatterm.service
-systemctl --user daemon-reload
 ```
 
 ## Auto-start (systemd)
@@ -94,8 +79,21 @@ systemctl --user enable --now cheatterm
 sudo loginctl enable-linger "$USER"
 ```
 
+## Uninstallation
 
+Delete the installed files:
 
+```bash
+rm -rf ~/.local/share/cheatterm
+```
+
+If you enabled auto-start, also remove the user service file:
+
+```bash
+systemctl --user disable --now cheatterm
+rm -f ~/.config/systemd/user/cheatterm.service
+systemctl --user daemon-reload
+```
 
 ## Usage
 
