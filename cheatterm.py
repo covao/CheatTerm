@@ -427,8 +427,14 @@ html,body{height:100%;background:var(--base);font-family:'Segoe UI',system-ui,sa
 .fm-act.del:hover{background:var(--red);color:var(--crust)}
 
 /* Editor pane */
-.fm-editor{display:none;flex-direction:column;flex-shrink:0;border-top:1px solid var(--surface0);height:45%}
+.fm-resizer{height:5px;background:var(--surface0);cursor:row-resize;flex-shrink:0;display:none;position:relative}
+.fm-resizer:hover,.fm-resizer.active{background:var(--blue)}
+.fm-resizer::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:30px;height:2px;background:var(--overlay);border-radius:1px}
+.fm-resizer.active::after{background:var(--text)}
+.fm-editor{display:none;flex-direction:column;flex-shrink:0;border-top:1px solid var(--surface0);height:45%;min-height:80px}
 .fm-editor.open{display:flex}
+.fm-container.editing .fm-body{flex:none;height:30%;min-height:80px}
+.fm-container.editing .fm-editor{height:auto;flex:1}
 .fm-editor-bar{display:flex;align-items:center;gap:6px;padding:4px 10px;background:var(--mantle);border-bottom:1px solid var(--surface0)}
 .fm-editor-name{flex:1;font-size:12px;color:var(--text);font-weight:600;overflow:hidden;text-overflow:ellipsis}
 .fm-editor-name.dirty::after{content:" *";color:var(--yellow)}
@@ -498,13 +504,18 @@ function switchTab(id){
       });
     }
   });
-  // Disable cheat button on file manager tabs
+  // Disable cheat button and minimize panel on file manager tabs
   const bc=document.getElementById('btn-cheat');
+  const cp=document.getElementById('cheat-panel');
   if(bc){
     const isFm=active&&active.type==='filemanager';
     bc.disabled=isFm;
     bc.style.opacity=isFm?'0.3':'';
     bc.style.pointerEvents=isFm?'none':'';
+    if(isFm && cp){
+      cp.classList.remove('open');
+      bc.classList.remove('active');
+    }
   }
 }
 
@@ -598,6 +609,7 @@ function createFmTab(){
         <th style="width:15%">Actions</th>
       </tr></thead><tbody></tbody></table>
     </div>
+    <div class="fm-resizer"></div>
     <div class="fm-editor">
       <div class="fm-editor-bar">
         <span class="fm-editor-name"></span>
@@ -637,6 +649,7 @@ function createFmTab(){
   const editBtn=el.querySelector('.fm-edit-btn');
   const saveBtn=el.querySelector('.fm-save-btn');
   const cursorPos=el.querySelector('.fm-cursor-pos');
+  const resizer=el.querySelector('.fm-resizer');
 
   // --- Listing ---
   async function loadDir(p){
@@ -779,6 +792,7 @@ function createFmTab(){
     editorTA.readOnly=!on;
     editBtn.style.display=on?'none':'';
     saveBtn.style.display=on?'':'none';
+    el.classList.toggle('editing',on);
     if(on)editorTA.focus();
   }
 
@@ -802,6 +816,7 @@ function createFmTab(){
         editBtn.style.display='';
       }
       editorPane.classList.add('open');
+      resizer.style.display='block';
       if(!d.notice)updateCursorPos();
     }catch(e){alert('Error: '+e)}
   }
@@ -827,6 +842,7 @@ function createFmTab(){
   el.querySelector('.fm-close-editor').addEventListener('click',()=>{
     if(editDirty&&!confirm('Unsaved changes. Close anyway?'))return;
     editorPane.classList.remove('open');
+    resizer.style.display='none';
     editPath=null;
     setEditMode(false);
   });
@@ -834,6 +850,34 @@ function createFmTab(){
   // Ctrl+S to save
   editorTA.addEventListener('keydown',e=>{
     if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();el.querySelector('.fm-save-btn').click()}
+  });
+
+  // --- Resizer drag ---
+  let resizerDragging=false;
+  resizer.addEventListener('mousedown',e=>{
+    e.preventDefault();
+    resizerDragging=true;
+    resizer.classList.add('active');
+    document.body.style.cursor='row-resize';
+    document.body.style.userSelect='none';
+  });
+  document.addEventListener('mousemove',e=>{
+    if(!resizerDragging)return;
+    const containerRect=el.getBoundingClientRect();
+    const toolbarH=el.querySelector('.fm-toolbar').offsetHeight;
+    const resizerH=resizer.offsetHeight;
+    const totalH=containerRect.height-toolbarH-resizerH;
+    const mouseY=e.clientY-containerRect.top-toolbarH;
+    const editorH=Math.max(80,Math.min(totalH-60,totalH-mouseY));
+    editorPane.style.height=editorH+'px';
+    fmBody.style.flex='1';
+  });
+  document.addEventListener('mouseup',()=>{
+    if(!resizerDragging)return;
+    resizerDragging=false;
+    resizer.classList.remove('active');
+    document.body.style.cursor='';
+    document.body.style.userSelect='';
   });
 
   // Load initial directory
